@@ -9,7 +9,7 @@
 // CONFIG — Replace with your deployed Google Apps Script URL
 // ============================================================
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbz0X7yXyrYsQyERz6rvYtSKiYuZqlendHunXL8ZlW42ezGjNhjwGmJxsGdezBt15X08Iw/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbxWip9kf8auTiN6gPXWtISvm6P2tjPbVECqktyD1ouzVv4bblhyARTzaicHvFjtl6ku6g/exec',
   DEMO_MODE: false,   // Set to false after connecting Google Sheets
   CURRENCY: '₦',
   APP_NAME: 'AMA Finance Manager'
