@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register – AMA Finance Manager</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+</head>
+<body>
+
+<div class="auth-page">
+  <div class="auth-bg">
+    <div class="auth-bg-orb"></div>
+    <div class="auth-bg-orb"></div>
+    <div class="auth-bg-orb"></div>
+  </div>
+
+  <div class="auth-card wide">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">💰</div>
+      <div class="auth-logo-text">
+        <div class="brand-name">AMA Finance</div>
+        <div class="brand-sub">Financial Management System</div>
+      </div>
+    </div>
+
+    <h1 class="auth-title">Create Account</h1>
+    <p class="auth-subtitle">Join thousands managing their finances smarter</p>
+
+    <form id="registerForm" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <div class="input-icon-wrap">
+            <span class="input-icon">🙍</span>
+            <input type="text" class="form-input" id="fullName" placeholder="John Doe">
+          </div>
+          <span class="form-error hidden" id="fullNameError"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <div class="input-icon-wrap">
+            <span class="input-icon">📱</span>
+            <input type="tel" class="form-input" id="phone" placeholder="+234 800 000 0000">
+          </div>
+          <span class="form-error hidden" id="phoneError"></span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-icon-wrap">
+          <span class="input-icon">✉️</span>
+          <input type="email" class="form-input" id="email" placeholder="you@example.com">
+        </div>
+        <span class="form-error hidden" id="emailError"></span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <div class="input-icon-wrap">
+          <span class="input-icon">@</span>
+          <input type="text" class="form-input" id="username" placeholder="Choose a unique username">
+        </div>
+        <span class="form-error hidden" id="usernameError"></span>
+        <span class="form-hint">Lowercase letters, numbers, and underscores only</span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-icon-wrap" style="position:relative">
+            <span class="input-icon">🔒</span>
+            <input type="password" class="form-input" id="password" placeholder="Min. 6 characters" autocomplete="new-password">
+            <button type="button" class="password-toggle" id="togglePwd1">👁️</button>
+          </div>
+          <span class="form-error hidden" id="passwordError"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <div class="input-icon-wrap" style="position:relative">
+            <span class="input-icon">🔒</span>
+            <input type="password" class="form-input" id="confirmPassword" placeholder="Re-enter password" autocomplete="new-password">
+            <button type="button" class="password-toggle" id="togglePwd2">👁️</button>
+          </div>
+          <span class="form-error hidden" id="confirmPasswordError"></span>
+        </div>
+      </div>
+
+      <!-- Password strength indicator -->
+      <div id="pwdStrengthWrap" style="margin-bottom:16px; display:none;">
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); margin-bottom:6px;">
+          <span>Password Strength</span>
+          <span id="pwdStrengthLabel">Weak</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar" id="pwdStrengthBar" style="width:0%"></div>
+        </div>
+      </div>
+
+      <label class="checkbox-wrap mb-3">
+        <input type="checkbox" id="agreeTerms">
+        <span class="custom-checkbox"></span>
+        I agree to the <a href="#" style="color:var(--accent-green); font-weight:600; text-decoration:underline;">Terms of Service</a> and <a href="#" style="color:var(--accent-green); font-weight:600; text-decoration:underline;">Privacy Policy</a>
+      </label>
+
+      <button type="submit" class="btn btn-primary" id="registerBtn">
+        <span class="btn-text">Create My Account →</span>
+      </button>
+    </form>
+
+    <div class="auth-footer-link">
+      Already have an account? <a href="login.html">Sign In</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="app.js"></script>
+<script>
+  // Password toggles
+  document.getElementById('togglePwd1').addEventListener('click', function() {
+    const el = document.getElementById('password');
+    const show = el.type === 'password';
+    el.type = show ? 'text' : 'password';
+    this.textContent = show ? '🙈' : '👁️';
+  });
+
+  document.getElementById('togglePwd2').addEventListener('click', function() {
+    const el = document.getElementById('confirmPassword');
+    const show = el.type === 'password';
+    el.type = show ? 'text' : 'password';
+    this.textContent = show ? '🙈' : '👁️';
+  });
+
+  // Password strength
+  document.getElementById('password').addEventListener('input', function() {
+    const val = this.value;
+    const wrap = document.getElementById('pwdStrengthWrap');
+    const bar  = document.getElementById('pwdStrengthBar');
+    const lbl  = document.getElementById('pwdStrengthLabel');
+
+    if (!val) { wrap.style.display = 'none'; return; }
+    wrap.style.display = 'block';
+
+    let score = 0;
+    if (val.length >= 6)  score++;
+    if (val.length >= 10) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    const levels = [
+      { label: 'Very Weak', width: '15%',  color: '#ff4757' },
+      { label: 'Weak',      width: '30%',  color: '#ff4757' },
+      { label: 'Fair',      width: '55%',  color: '#f7b731' },
+      { label: 'Good',      width: '75%',  color: '#1a6fff' },
+      { label: 'Strong',    width: '100%', color: '#00c896' }
+    ];
+
+    const lvl = levels[Math.min(score, 4)];
+    bar.style.width   = lvl.width;
+    bar.style.background = lvl.color;
+    lbl.textContent   = lvl.label;
+    lbl.style.color   = lvl.color;
+  });
+
+  // Form submission
+  document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    clearErrors();
+
+    const fullName       = document.getElementById('fullName').value.trim();
+    const phone          = document.getElementById('phone').value.trim();
+    const email          = document.getElementById('email').value.trim();
+    const username       = document.getElementById('username').value.trim().toLowerCase();
+    const password       = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const agreeTerms     = document.getElementById('agreeTerms').checked;
+
+    let valid = true;
+
+    if (!fullName) { showFieldError('fullNameError', 'Full name is required'); valid = false; }
+    if (!phone)    { showFieldError('phoneError',    'Phone number is required'); valid = false; }
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showFieldError('emailError', 'Please enter a valid email address'); valid = false;
+    }
+
+    if (!username || !/^[a-z0-9_]{3,20}$/.test(username)) {
+      showFieldError('usernameError', 'Username: 3-20 chars, letters/numbers/underscores only'); valid = false;
+    }
+
+    if (!password || password.length < 6) {
+      showFieldError('passwordError', 'Password must be at least 6 characters'); valid = false;
+    }
+
+    if (password !== confirmPassword) {
+      showFieldError('confirmPasswordError', 'Passwords do not match'); valid = false;
+    }
+
+    if (!agreeTerms) {
+      showToast('warning', 'Terms Required', 'Please accept the terms of service'); valid = false;
+    }
+
+    if (!valid) return;
+
+    const btn = document.getElementById('registerBtn');
+    btn.classList.add('btn-loading');
+    btn.disabled = true;
+
+    try {
+      const result = await AMA.auth.register({ fullName, phone, email, username, password });
+
+      if (result.success) {
+        showToast('success', 'Account Created!', 'Redirecting to login...');
+        setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+      } else {
+        showToast('error', 'Registration Failed', result.message);
+      }
+    } catch(err) {
+      showToast('error', 'Error', 'Something went wrong. Please try again.');
+    }
+
+    btn.classList.remove('btn-loading');
+    btn.disabled = false;
+  });
+
+  function clearErrors() {
+    document.querySelectorAll('.form-error').forEach(el => {
+      el.classList.add('hidden'); el.textContent = '';
+    });
+  }
+
+  function showFieldError(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = '⚠ ' + msg;
+    el.classList.remove('hidden');
+  }
+</script>
+</body>
+</html>

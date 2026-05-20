@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login – AMA Finance Manager</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+</head>
+<body>
+
+<div class="auth-page">
+  <div class="auth-bg">
+    <div class="auth-bg-orb"></div>
+    <div class="auth-bg-orb"></div>
+    <div class="auth-bg-orb"></div>
+  </div>
+
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">💰</div>
+      <div class="auth-logo-text">
+        <div class="brand-name">AMA Finance</div>
+        <div class="brand-sub">Financial Management System</div>
+      </div>
+    </div>
+
+    <h1 class="auth-title">Welcome Back</h1>
+    <p class="auth-subtitle">Sign in to manage your finances smartly</p>
+
+    <form id="loginForm" novalidate autocomplete="off">
+      <div class="form-group">
+        <label class="form-label">Username or Email</label>
+        <div class="input-icon-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" class="form-input" id="usernameOrEmail"
+                 placeholder="Enter your username or email" autocomplete="username">
+        </div>
+        <span class="form-error hidden" id="usernameError"></span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-icon-wrap" style="position:relative">
+          <span class="input-icon">🔒</span>
+          <input type="password" class="form-input" id="password"
+                 placeholder="Enter your password" autocomplete="current-password">
+          <button type="button" class="password-toggle" id="togglePassword" aria-label="Show password">👁️</button>
+        </div>
+        <span class="form-error hidden" id="passwordError"></span>
+      </div>
+
+      <div class="flex-between mb-3">
+        <label class="checkbox-wrap">
+          <input type="checkbox" id="rememberMe">
+          <span class="custom-checkbox"></span>
+          Remember me
+        </label>
+        <a href="#" style="font-size:13px; color: var(--accent-green); font-weight:600;">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="loginBtn">
+        <span class="btn-text">Sign In →</span>
+      </button>
+    </form>
+
+    <div class="auth-footer-link">
+      Don't have an account? <a href="register.html">Create Account</a>
+    </div>
+
+    <!-- Demo Hint -->
+    <div style="margin-top:20px; padding:12px 16px; background:rgba(0,200,150,0.06); border:1px solid rgba(0,200,150,0.15); border-radius:10px;">
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">🎯 Demo Mode — No backend required</p>
+      <p style="font-size:12px; color:var(--accent-green); font-weight:600;">Username: <strong>demo</strong> &nbsp; Password: <strong>demo123</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="app.js"></script>
+<script>
+  // Login page logic
+  document.getElementById('togglePassword').addEventListener('click', function() {
+    const pwd = document.getElementById('password');
+    const isText = pwd.type === 'text';
+    pwd.type = isText ? 'password' : 'text';
+    this.textContent = isText ? '👁️' : '🙈';
+  });
+
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    clearErrors();
+
+    const usernameOrEmail = document.getElementById('usernameOrEmail').value.trim();
+    const password        = document.getElementById('password').value;
+    const rememberMe      = document.getElementById('rememberMe').checked;
+    const btn             = document.getElementById('loginBtn');
+
+    let valid = true;
+
+    if (!usernameOrEmail) {
+      showFieldError('usernameError', 'Please enter your username or email');
+      valid = false;
+    }
+    if (!password) {
+      showFieldError('passwordError', 'Please enter your password');
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    btn.classList.add('btn-loading');
+    btn.disabled = true;
+
+    try {
+      const result = await AMA.auth.login(usernameOrEmail, password, rememberMe);
+
+      if (result.success) {
+        showToast('success', 'Welcome Back!', `Hello ${result.user.fullName} 👋`);
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+      } else {
+        showToast('error', 'Login Failed', result.message);
+        document.getElementById('password').value = '';
+      }
+    } catch(err) {
+      showToast('error', 'Error', 'Something went wrong. Please try again.');
+    }
+
+    btn.classList.remove('btn-loading');
+    btn.disabled = false;
+  });
+
+  function clearErrors() {
+    document.querySelectorAll('.form-error').forEach(el => {
+      el.classList.add('hidden');
+      el.textContent = '';
+    });
+  }
+
+  function showFieldError(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = '⚠ ' + msg;
+    el.classList.remove('hidden');
+  }
+
+  // Pre-fill demo credentials
+  const saved = localStorage.getItem('ama_remember_user');
+  if (saved) {
+    document.getElementById('usernameOrEmail').value = saved;
+    document.getElementById('rememberMe').checked = true;
+  }
+</script>
+</body>
+</html>

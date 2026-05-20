@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AMA Finance Manager</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+  <style>
+    .landing {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .landing-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .landing-bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.12;
+    }
+
+    .landing-bg-orb:nth-child(1) {
+      width: 600px; height: 600px;
+      background: var(--accent-green);
+      top: -200px; left: -200px;
+      animation: orbFloat 10s ease-in-out infinite;
+    }
+
+    .landing-bg-orb:nth-child(2) {
+      width: 500px; height: 500px;
+      background: var(--accent-blue);
+      bottom: -150px; right: -150px;
+      animation: orbFloat 12s ease-in-out infinite reverse;
+    }
+
+    .landing-content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+    }
+
+    .landing-logo {
+      width: 80px; height: 80px;
+      background: var(--gradient-green);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 28px;
+      box-shadow: var(--shadow-green);
+      animation: logoIn 0.8s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    @keyframes logoIn {
+      from { opacity:0; transform: scale(0.5) rotate(-10deg); }
+      to   { opacity:1; transform: scale(1) rotate(0); }
+    }
+
+    .landing-title {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      animation: fadeUp 0.8s 0.2s both;
+    }
+
+    .landing-title .green-text {
+      background: var(--gradient-green);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .landing-subtitle {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+      animation: fadeUp 0.8s 0.3s both;
+    }
+
+    .landing-cta {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.4s both;
+    }
+
+    .landing-cta .btn {
+      width: auto;
+      padding: 16px 36px;
+      font-size: 16px;
+    }
+
+    .landing-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 64px;
+      animation: fadeUp 0.8s 0.5s both;
+    }
+
+    @media (max-width: 600px) {
+      .landing-features { grid-template-columns: 1fr; }
+    }
+
+    .feature-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      text-align: left;
+    }
+
+    .feature-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .feature-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .feature-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(24px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    .landing-footer {
+      position: relative;
+      z-index: 1;
+      margin-top: 64px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+<div class="landing">
+  <div class="landing-bg">
+    <div class="landing-bg-orb"></div>
+    <div class="landing-bg-orb"></div>
+  </div>
+
+  <div class="landing-content">
+    <div class="landing-logo">💰</div>
+
+    <h1 class="landing-title">
+      Master Your<br>
+      <span class="green-text">Financial Life</span>
+    </h1>
+
+    <p class="landing-subtitle">
+      AMA Finance Manager helps you track income, manage expenses, monitor debts,
+      and gain powerful insights into your financial health — all in one place.
+    </p>
+
+    <div class="landing-cta">
+      <a href="login.html" class="btn btn-primary">🚀 Get Started</a>
+      <a href="register.html" class="btn btn-secondary">📝 Create Account</a>
+    </div>
+
+    <div class="landing-features">
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <div class="feature-title">Income Tracking</div>
+        <div class="feature-desc">Record all income sources — salary, freelance, business, and more.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💸</div>
+        <div class="feature-title">Expense Management</div>
+        <div class="feature-desc">Track every naira spent across categories with smart filtering.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏦</div>
+        <div class="feature-title">Debt Manager</div>
+        <div class="feature-desc">Track money borrowed and lent with payment history & auto-balance.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <div class="feature-title">Reports & Charts</div>
+        <div class="feature-desc">Beautiful analytics and charts to visualize your financial trend.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">☁️</div>
+        <div class="feature-title">Google Sheets Sync</div>
+        <div class="feature-desc">Powered by Google Apps Script — your data, your spreadsheet.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <div class="feature-title">Mobile Responsive</div>
+        <div class="feature-desc">Works perfectly on phones, tablets, and desktops.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="landing-footer">
+    Copyright © 2026 AMA Global Inc. All Rights Reserved.
+  </div>
+</div>
+
+<script>
+  // Auto-redirect if already logged in
+  try {
+    const user = JSON.parse(sessionStorage.getItem('ama_user'));
+    if (user) window.location.href = 'dashboard.html';
+  } catch(e) {}
+</script>
+</body>
+</html>
