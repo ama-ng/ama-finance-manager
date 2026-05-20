@@ -56,6 +56,40 @@ function doPost(e) {
 
 function doGet(e) {
   try {
+    // -------------------------------------------------------
+    // CORS FIX: Frontend sends POST actions as GET requests
+    // with a 'payload' parameter containing the JSON body.
+    // This avoids CORS preflight blocked by Google Apps Script
+    // when called from GitHub Pages / Netlify (external HTTPS).
+    // -------------------------------------------------------
+    if (e.parameter.payload) {
+      // This is actually a POST action disguised as GET
+      const data = JSON.parse(e.parameter.payload);
+      const action = data.action;
+      let result;
+      switch (action) {
+        case 'registerUser':   result = registerUser(data);   break;
+        case 'loginUser':      result = loginUser(data);      break;
+        case 'addIncome':      result = addIncome(data);      break;
+        case 'updateIncome':   result = updateIncome(data);   break;
+        case 'deleteIncome':   result = deleteIncome(data);   break;
+        case 'addExpense':     result = addExpense(data);     break;
+        case 'updateExpense':  result = updateExpense(data);  break;
+        case 'deleteExpense':  result = deleteExpense(data);  break;
+        case 'addDebt':        result = addDebt(data);        break;
+        case 'updateDebt':     result = updateDebt(data);     break;
+        case 'deleteDebt':     result = deleteDebt(data);     break;
+        case 'recordPayment':  result = recordPayment(data);  break;
+        case 'updateProfile':  result = updateProfile(data);  break;
+        case 'changePassword': result = changePassword(data); break;
+        default: result = { success: false, message: 'Unknown action: ' + action };
+      }
+      return ContentService
+        .createTextOutput(JSON.stringify(result))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Normal GET requests (fetchDashboard, fetchIncome, etc.)
     const action = e.parameter.action;
     const userId = e.parameter.userId;
 
@@ -67,7 +101,7 @@ function doGet(e) {
       case 'fetchDebts':     result = fetchDebts(userId);                break;
       case 'fetchPayments':  result = fetchPayments(e.parameter.debtId); break;
       case 'fetchReports':   result = fetchReports(userId, e.parameter); break;
-      default: result = { success: false, message: 'Unknown action' };
+      default: result = { success: false, message: 'Unknown action: ' + action };
     }
 
     return ContentService
@@ -76,7 +110,7 @@ function doGet(e) {
 
   } catch (err) {
     return ContentService
-      .createTextOutput(JSON.stringify({ success: false, message: err.message }))
+      .createTextOutput(JSON.stringify({ success: false, message: 'doGet error: ' + err.message }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
