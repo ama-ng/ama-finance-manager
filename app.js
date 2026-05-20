@@ -140,17 +140,18 @@ function showToast(type, title, message, duration = 4000) {
 
 // ============================================================
 // API SERVICE (Google Apps Script + Demo Mode)
+// CORS FIX: All requests use GET to avoid CORS preflight errors
+// when hosted on GitHub Pages / Netlify with Google Apps Script
 // ============================================================
 const api = {
   async post(data) {
     if (CONFIG.DEMO_MODE) return this._demoPost(data);
     try {
-      const res = await fetch(CONFIG.API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      return await res.json();
+      // Send as GET with payload param to bypass CORS preflight
+      const params = new URLSearchParams({ payload: JSON.stringify(data) }).toString();
+      const res = await fetch(`${CONFIG.API_URL}?${params}`);
+      const text = await res.text();
+      try { return JSON.parse(text); } catch(e) { return { success: false, message: 'Bad response from server: ' + text.substring(0,100) }; }
     } catch (err) {
       return { success: false, message: 'Network error: ' + err.message };
     }
@@ -161,7 +162,8 @@ const api = {
     try {
       const query = new URLSearchParams(params).toString();
       const res = await fetch(`${CONFIG.API_URL}?${query}`);
-      return await res.json();
+      const text = await res.text();
+      try { return JSON.parse(text); } catch(e) { return { success: false, message: 'Bad response from server: ' + text.substring(0,100) }; }
     } catch (err) {
       return { success: false, message: 'Network error: ' + err.message };
     }
